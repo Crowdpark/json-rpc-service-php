@@ -9,15 +9,45 @@
 namespace Crowdpark\Net\JsonRpc;
 interface InterfaceJsonRpcRequest
 {
-    public function setRpcId(int $id);
+    /**
+     * @abstract
+     * @param int $id
+     */
+    public function setRpcId(\int $id);
 
+    /**
+     * @abstract
+     * @return int
+     */
     public function getRpcId();
 
+    /**
+     * @abstract
+     * @param array $params
+     */
     public function setParams(array $params);
 
+    /**
+     * @abstract
+     * @return array
+     */
     public function getParams();
 
-    public function setMethod(string $method);
+    /**
+     * @abstract
+     * @param string $method
+     */
+    public function setMethod(\string $method);
 
+    /**
+     * @abstract
+     * @return string
+     */
     public function getMethod();
+
+    /**
+     * @abstract
+     * @return array
+     */
+    public function getPostData();
 }

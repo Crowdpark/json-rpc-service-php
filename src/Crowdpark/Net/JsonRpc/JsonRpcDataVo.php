@@ -13,12 +13,12 @@ class JsonRpcDataVo implements InterfaceJsonRpcRequest
     /**
      * @var int
      */
-    private $_rpcId;
+    private $_rpcId = 1;
 
     /**
      * @var array
      */
-    private $_params;
+    private $_params = array();
 
     /**
      * @var string
@@ -80,5 +80,18 @@ class JsonRpcDataVo implements InterfaceJsonRpcRequest
     public function getMethod()
     {
         return $this->_method;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPostData()
+    {
+        $postData           = array();
+        $postData['id']     = $this->getRpcId();
+        $postData['method'] = $this->getMethod();
+        $postData['params'] = $this->getParams();
+
+        return json_encode($postData);
     }
 }
