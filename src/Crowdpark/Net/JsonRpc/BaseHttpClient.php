@@ -75,8 +75,7 @@ abstract class BaseHttpClient
 
     protected function _getMultiCurl()
     {
-        if(!$this->_multiCurl)
-        {
+        if (!$this->_multiCurl) {
             $this->_multiCurl = $this->_initMultiCurl();
         }
 
@@ -114,14 +113,16 @@ abstract class BaseHttpClient
      *
      * @return resource
      */
-    protected function _getSingleCurl(\Processus\Lib\JsonRpc\InterfaceJsonRpcRequest $rpcRequest)
+    protected function _getSingleCurl(InterfaceJsonRpcRequest $rpcRequest)
     {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_URL, $this->getGateway());
         curl_setopt(
-            $ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json",
-                                           'Content-Length: ' . strlen($rpcRequest->getPostData()))
+            $ch, CURLOPT_HTTPHEADER, array(
+                                          "Content-Type: application/json",
+                                          'Content-Length: ' . strlen($rpcRequest->getPostData())
+                                     )
         );
         curl_setopt($ch, CURLOPT_POSTFIELDS, $rpcRequest->getPostData());
         return $ch;
@@ -140,7 +141,7 @@ abstract class BaseHttpClient
      *
      * @return BaseHttpClient
      */
-    public function addRequest(\Processus\Lib\JsonRpc\InterfaceJsonRpcRequest $rpcRequest)
+    public function addRequest(InterfaceJsonRpcRequest $rpcRequest)
     {
         $this->_requestList[] = $rpcRequest;
         return $this;
@@ -151,27 +152,25 @@ abstract class BaseHttpClient
      *
      * @return array
      */
-    public function sendRpc(\Processus\Lib\JsonRpc\InterfaceJsonRpcRequest $rpcRequest)
+    public function sendRpc(InterfaceJsonRpcRequest $rpcRequest)
     {
         if ($rpcRequest) {
             $this->_requestList[] = $rpcRequest;
         }
 
         /** @var $request InterfaceJsonRpcRequest */
-        foreach ($this->_requestList as $request)
-        {
+        foreach ($this->_requestList as $request) {
             $curlRequest = $this->_getSingleCurl($request);
             $this->_addResourceToMultiCurl($curlRequest);
         }
 
-        $active = null;
+        $active = NULL;
         do {
             curl_multi_exec($this->_multiCurl, $active);
         } while ($active > 0);
 
         $curlContent = array();
-        foreach ($this->_getCurlList() as $h)
-        {
+        foreach ($this->_getCurlList() as $h) {
             $curlContent[] = curl_multi_getcontent($h);
             $this->_removeMultihandler($h);
         }
